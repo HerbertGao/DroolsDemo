@@ -1,0 +1,36 @@
+package rules;
+
+import demo.Message;
+
+rule "rule1"
+   salience 1
+   no-loop true
+   lock-on-active true
+   when
+       $message: Message(status == Message.HELLO)
+   then
+       System.out.println("Status is 'Hello', set 'Hello World!' to message");
+       $message.setMessage("Hello World!");
+       System.out.println("Message: " + $message.getMessage());
+       System.out.println("Then set 'Goodbye' to status");
+       $message.setStatus(Message.GOODBYE);
+       update($message);
+
+//        System.out.println("Then create a new Message and set 'Hello' to status");
+//        Message message2 = new Message();
+//        message2.setStatus(Message.HELLO);
+//        insert(message2);
+end
+
+rule "rule2"
+   salience 1
+   when
+       $message: Message(status == Message.GOODBYE)
+   then
+       System.out.println("Status is 'Goodbye', set 'Goodbye World!' to message");
+       $message.setMessage("Goodbye World!");
+       System.out.println("Message: " + $message.getMessage());
+       System.out.println("Then set 'Hello' to status");
+       $message.setStatus(Message.HELLO);
+       update($message);
+end
